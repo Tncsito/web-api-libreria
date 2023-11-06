@@ -1,7 +1,9 @@
+using Libreria_EESA.Dato;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,9 +18,11 @@ namespace Libreria_EESA
 {
     public class Startup
     {
+        public string ConnectionString { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConnectionString = Configuration.GetConnectionString("DefaultConnetionString");
         }
 
         public IConfiguration Configuration { get; }
@@ -28,6 +32,8 @@ namespace Libreria_EESA
         {
 
             services.AddControllers();
+            //Conexion con db context
+            services.AddDbContext<AppDBContext>(options => options.UseSqlServer(ConnectionString));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Libreria_EESA", Version = "v1" });
@@ -54,6 +60,7 @@ namespace Libreria_EESA
             {
                 endpoints.MapControllers();
             });
+            AppDBInitialer.Seed(app);
         }
     }
 }
