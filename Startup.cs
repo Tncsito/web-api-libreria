@@ -1,4 +1,5 @@
 using Libreria_EESA.Dato;
+using Libreria_EESA.Dato.Modelo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,8 @@ namespace Libreria_EESA
             services.AddControllers();
             //Conexion con db context
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(ConnectionString));
+            //Configurar el servicio para que pueda ser usado
+            services.AddTransient<BooksService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Libreria_EESA", Version = "v1" });
